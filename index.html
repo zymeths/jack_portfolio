@@ -285,6 +285,59 @@
     .blog-excerpt { font-size: 13px; color: var(--text-muted); margin-top: 7px; line-height: 1.65; }
     .badge { font-family: var(--mono); font-size: 10px; padding: 4px 10px; border: 1px solid var(--border-hover); border-radius: 4px; color: var(--text-dim); white-space: nowrap; }
 
+    /* BLOG EXPAND */
+    .blog-item { cursor: pointer; }
+    .blog-item-header { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; }
+    .blog-toggle { font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; border: 1px solid var(--text-dim); padding: 2px 7px; border-radius: 3px; transition: color 0.2s, border-color 0.2s; white-space: nowrap; flex-shrink: 0; }
+    .blog-item:hover .blog-toggle { color: var(--green); border-color: var(--green); }
+    .blog-item.open .blog-toggle { color: var(--green); border-color: var(--green); }
+    .blog-item.open .blog-title { color: var(--green); }
+
+    .blog-expand {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .blog-item.open .blog-expand { max-height: 9999px; }
+
+    .blog-expand-inner {
+      border-top: 1px solid var(--border);
+      margin-top: 1.5rem;
+      padding-top: 2rem;
+    }
+
+    /* Blog article prose */
+    .blog-article { max-width: 680px; }
+    .blog-article h3 {
+      font-family: var(--mono); font-size: 14px; font-weight: 500;
+      color: var(--green); letter-spacing: 0.1em; text-transform: uppercase;
+      margin: 2.25rem 0 0.75rem;
+    }
+    .blog-article h3::before { content: '// '; color: var(--text-dim); }
+    .blog-article h3:first-child { margin-top: 0; }
+    .blog-article p { font-size: 14px; color: var(--text-muted); line-height: 1.85; margin-bottom: 1.1rem; }
+    .blog-article strong { color: #ced2e2; font-weight: 500; }
+    .blog-article em { color: var(--cyan); font-style: italic; }
+
+    .blog-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0 1.5rem; font-family: var(--mono); font-size: 12px; }
+    .blog-table th { color: var(--green); font-weight: 500; letter-spacing: 0.08em; text-align: left; padding: 8px 14px; border-bottom: 1px solid var(--border-hover); }
+    .blog-table td { color: var(--text-muted); padding: 8px 14px; border-bottom: 1px solid var(--border); line-height: 1.55; }
+    .blog-table tr:last-child td { border-bottom: none; }
+    .blog-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .blog-callout {
+      border-left: 2px solid var(--green);
+      padding: 0.85rem 1.25rem;
+      margin: 1.5rem 0;
+      background: var(--green-dim);
+      border-radius: 0 6px 6px 0;
+    }
+    .blog-callout p { margin-bottom: 0; color: #ced2e2; font-style: italic; }
+
+    .blog-meta { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 2rem; display: flex; gap: 1.5rem; }
+    .blog-meta span { display: flex; align-items: center; gap: 6px; }
+    .blog-meta span::before { content: '›'; color: var(--green); }
+
     /* CONTACT */
     .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
     .contact-intro { font-size: 15px; color: var(--text-muted); margin-bottom: 2.5rem; line-height: 1.85; }
@@ -537,30 +590,119 @@
       <div class="section-label">writing</div>
       <h2>Blog &amp; Writeups</h2>
       <div class="blog-list">
+
+        <!-- POST 01 -->
         <div class="blog-item fade-in">
-          <div>
-            <div class="blog-category">machine learning</div>
-            <div class="blog-title">Building Production-Grade ML Pipelines for Credit Risk</div>
-            <div class="blog-excerpt">What I learned going from messy raw financial data to a deployable loan default classifier — preprocessing decisions, model selection, and the trade-offs nobody writes about.</div>
+          <div class="blog-item-header">
+            <div>
+              <div class="blog-category">machine learning</div>
+              <div class="blog-title">Building Production-Grade ML Pipelines for Credit Risk</div>
+              <div class="blog-excerpt">What I learned going from messy raw financial data to a deployable loan default classifier — preprocessing decisions, model selection, and the trade-offs nobody writes about.</div>
+            </div>
+            <span class="badge">coming soon</span>
           </div>
-          <span class="badge">coming soon</span>
         </div>
+
+        <!-- POST 02 — PUBLISHED -->
         <div class="blog-item fade-in delay-1">
-          <div>
-            <div class="blog-category">analytics</div>
-            <div class="blog-title">RFM Segmentation: When Simple Models Beat Complex Ones</div>
-            <div class="blog-excerpt">Why a well-structured RFM analysis outperformed clustering models for our use case, and how we packaged the output so product teams could actually act on it.</div>
+          <div class="blog-item-header">
+            <div>
+              <div class="blog-category">analytics</div>
+              <div class="blog-title">RFM Segmentation: When Simple Models Beat Complex Ones</div>
+              <div class="blog-excerpt">Why a well-structured RFM analysis outperformed clustering models for our use case, and how we packaged the output so product teams could actually act on it.</div>
+            </div>
+            <span class="blog-toggle">[ + read ]</span>
           </div>
-          <span class="badge">coming soon</span>
+          <div class="blog-expand">
+            <div class="blog-expand-inner">
+              <div class="blog-meta">
+                <span>May 2026</span>
+                <span>analytics</span>
+                <span>7 min read</span>
+              </div>
+              <div class="blog-article">
+
+                <p>There's a temptation in data science to reach for the most sophisticated tool available. When our team was asked to segment coupon users for a super-app platform, the instinct was to run clustering — K-Means, DBSCAN, maybe something hierarchical. Let the algorithm find the natural groupings.</p>
+                <p>We didn't. We built an RFM model instead. And it was the right call.</p>
+
+                <h3>The Problem</h3>
+                <p>We had coupon transaction data spanning two years and tens of thousands of users. The business question was simple: <em>who are our users, and how should we treat them differently?</em></p>
+                <p>The "obvious" answer was clustering. But before reaching for sklearn, we asked a more important question: <strong>what does the product team actually need to do with this output?</strong></p>
+                <p>The answer was: target users with different coupon strategies. Re-engage lapsing users. Reward loyal ones. Push high-value offers to high-spend segments. That's a retention and CRM problem. And for that, RFM is almost always the better fit.</p>
+
+                <h3>Why RFM, Not Clustering</h3>
+                <p>Clustering finds natural groupings in your data — but those groupings aren't always <em>actionable</em>. You might end up with a cluster defined by "users who buy on Tuesdays and prefer cosmetics," which is interesting but hard to build a campaign around.</p>
+                <p>RFM gives you segments grounded in three dimensions that every marketer and product manager already understands: <strong>Recency</strong> — how recently did they buy? <strong>Frequency</strong> — how often? <strong>Monetary Value</strong> — how much do they spend? These map directly to business levers. You know exactly what to do with a high-R, low-F user versus a low-R, high-M user. The model is interpretable by construction.</p>
+
+                <h3>The Scoring Approach</h3>
+                <p>We scored each dimension on a 1–5 scale. For Recency, the bands were time-based. For Frequency and Monetary Value, we used percentile thresholds.</p>
+                <table class="blog-table">
+                  <thead><tr><th>Score</th><th>Recency</th><th>Frequency / Monetary</th></tr></thead>
+                  <tbody>
+                    <tr><td>5</td><td>Within 30 days</td><td>Top 5%</td></tr>
+                    <tr><td>4</td><td>Last 3 months</td><td>Top 20%</td></tr>
+                    <tr><td>3</td><td>Last 6 months</td><td>Top 30%</td></tr>
+                    <tr><td>2</td><td>Last year</td><td>Top 60%</td></tr>
+                    <tr><td>1</td><td>Over a year ago</td><td>Rest</td></tr>
+                  </tbody>
+                </table>
+                <p>This produces a three-digit RFM score per user (e.g. 554, 312, 111), giving 125 possible combinations. Rather than treating each combination separately, we collapsed them into 11 named segments — which is where the real value came from.</p>
+
+                <h3>The Segments</h3>
+                <p>Instead of "Cluster 3" or "High-R Low-F," we gave every segment a name that made the business logic self-evident.</p>
+                <table class="blog-table">
+                  <thead><tr><th>Segment</th><th>RFM Profile</th><th>What it means</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>Soul Mate</strong></td><td>555</td><td>Best users — recent, frequent, high spend</td></tr>
+                    <tr><td><strong>Lover</strong></td><td>553, 534, 544…</td><td>Loyal, consistently high RFM</td></tr>
+                    <tr><td><strong>New Passion</strong></td><td>514, 515, 525…</td><td>New but spending big</td></tr>
+                    <tr><td><strong>Flirting</strong></td><td>414, 415, 424…</td><td>Recent, high value, but infrequent</td></tr>
+                    <tr><td><strong>Potential</strong></td><td>332, 333, 353…</td><td>Solid middle-of-the-road users</td></tr>
+                    <tr><td><strong>About to Dump You</strong></td><td>212, 221, 322…</td><td>Disengaging — critical at-risk group</td></tr>
+                    <tr><td><strong>Ex</strong></td><td>113, 133, 153…</td><td>Used to be great customers</td></tr>
+                    <tr><td><strong>Break-up (Lost)</strong></td><td>111, 112, 122…</td><td>Gone</td></tr>
+                  </tbody>
+                </table>
+                <p>The naming wasn't just fun — it made the segments sticky. When a PM says "let's focus on the <em>About to Dump You</em> group this sprint," everyone in the room immediately knows what that means and why it matters.</p>
+
+                <h3>What the Data Showed</h3>
+                <p><strong>The "About to Dump You" segment was the largest at-risk group</strong> — over 3,500 users — but their average monetary value was still decent. These weren't low-value users walking away. They were disengaging despite having spent meaningfully before. That's a winnable segment if you act fast.</p>
+                <p><strong>The Apprentice segment was large but misunderstood.</strong> Nearly 5,000 users with very recent activity but low frequency and spend. Easy to write off — but we flagged them as a growth opportunity. They were new and active; they just hadn't found the right coupon category yet.</p>
+                <p><strong>Soul Mates (555) were only 56 users</strong>, but averaged 43+ purchases and a monetay mean of ~947k. The recommendation was simple: don't neglect them. Loyalty rewards, exclusive early access, anything that signals they're seen.</p>
+                <p>Year-over-year, the overall user base grew but quality eroded — the Apprentice and About-to-Dump segments had grown fastest, suggesting the platform was good at acquisition but struggling with retention.</p>
+
+                <h3>The Recommendations</h3>
+                <p>The segmentation was only useful if it drove action. We packaged the output into four targeted strategies:</p>
+                <p><strong>1. Win back the "About to Dump You" group</strong> with one-time-use, low-friction coupons. Our data showed this segment over-indexed on affordable, habitual purchases — coffee, pizza, casual dining. A cheap, easy win is the right re-engagement hook.</p>
+                <p><strong>2. Nurture Apprentices while recency is still high.</strong> They haven't disengaged yet. Serve them low-cost, high-volume coupon categories to build the habit before they drift.</p>
+                <p><strong>3. Reward the top segments.</strong> Soul Mates, Lovers, and New Passions shouldn't receive the same campaigns as everyone else. Loyalty gifts or exclusive coupons reinforce the behaviour you want to keep.</p>
+                <p><strong>4. Use weaker segments for research.</strong> Offering a small discount ("fill out this survey, get 4% off your next coupon") on lost or Ex users is a low-cost way to understand churn without a separate research budget.</p>
+
+                <h3>What I'd Do Differently</h3>
+                <p>RFM has real limitations worth being honest about. The model is static — a user's segment doesn't update until you re-run the scoring. In a live product, you'd want this running on a scheduled pipeline, not a one-off analysis.</p>
+                <p>The monetary thresholds were also percentile-based, which means a "top 5%" user in a thin dataset might not be high-value in absolute terms. Category-level RFM — separate scoring for food coupons vs. product coupons — would have been more nuanced, but the added complexity wasn't worth it for a first iteration.</p>
+
+                <div class="blog-callout">
+                  <p>A well-scoped simple model that gets used beats a sophisticated model that gets shelved. We could have spent weeks on clustering and presented something that impressed in a demo but left the product team with no clear next step. Instead, they had 11 named segments and four campaign strategies by end of sprint.</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- POST 03 -->
         <div class="blog-item fade-in delay-2">
-          <div>
-            <div class="blog-category">data governance</div>
-            <div class="blog-title">Lessons from Standardizing KPIs Across 5 Business Units</div>
-            <div class="blog-excerpt">How we eliminated conflicting reports inside a 27K-employee organization — the process, the stakeholder politics, and the tooling that made it stick.</div>
+          <div class="blog-item-header">
+            <div>
+              <div class="blog-category">data governance</div>
+              <div class="blog-title">Lessons from Standardizing KPIs Across 5 Business Units</div>
+              <div class="blog-excerpt">How we eliminated conflicting reports inside a 27K-employee organization — the process, the stakeholder politics, and the tooling that made it stick.</div>
+            </div>
+            <span class="badge">coming soon</span>
           </div>
-          <span class="badge">coming soon</span>
         </div>
+
       </div>
     </section>
   </div>
@@ -636,6 +778,23 @@
         if (!isOpen) {
           card.classList.add('open');
           toggle.textContent = '[ − collapse ]';
+        }
+      });
+    });
+    // Blog item expand / collapse
+    document.querySelectorAll('.blog-item').forEach(item => {
+      const toggle = item.querySelector('.blog-toggle');
+      if (!toggle) return; // skip "coming soon" items
+      item.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        // Close all open blog items first
+        document.querySelectorAll('.blog-item.open').forEach(b => {
+          b.classList.remove('open');
+          b.querySelector('.blog-toggle').textContent = '[ + read ]';
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          toggle.textContent = '[ − close ]';
         }
       });
     });
