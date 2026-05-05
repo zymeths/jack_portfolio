@@ -277,7 +277,7 @@
 
     /* BLOG */
     .blog-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-    .blog-item { background: var(--bg-card); padding: 1.75rem 2rem; display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; transition: background 0.2s; }
+    .blog-item { background: var(--bg-card); padding: 1.75rem 2rem; display: block; transition: background 0.2s; }
     .blog-item:hover { background: #14181f; }
     .blog-item:hover .blog-title { color: var(--green); }
     .blog-category { font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 7px; }
@@ -372,7 +372,7 @@
       .stats-row { grid-template-columns: repeat(2, 1fr); }
       h2 { font-size: 24px; }
       .hero-name { font-size: 38px; }
-      .blog-item { grid-template-columns: 1fr; gap: 0.75rem; }
+      .blog-item-header { grid-template-columns: 1fr; gap: 0.75rem; }
     }
   </style>
 </head>
