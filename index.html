@@ -24,7 +24,7 @@
       --mono: 'JetBrains Mono', monospace;
       --sans: 'IBM Plex Sans', sans-serif;
     }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; zoom: 1.25; }
     body {
       background: var(--bg);
       color: var(--text);
@@ -81,7 +81,10 @@
     .prompt-arrow { color: var(--green); }
     .hero-name { font-family: var(--mono); font-size: clamp(38px, 6vw, 68px); font-weight: 700; line-height: 1.05; margin-bottom: 1.25rem; color: #f2f4fc; letter-spacing: -0.02em; }
     .hero-name .accent { color: var(--green); }
-    .hero-role { font-family: var(--mono); font-size: clamp(13px, 1.6vw, 17px); color: var(--text-muted); margin-bottom: 2rem; letter-spacing: 0.04em; }
+    .hero-role { font-family: var(--mono); font-size: clamp(13px, 1.6vw, 17px); color: var(--text-muted); margin-bottom: 0.85rem; letter-spacing: 0.04em; }
+    .hero-meta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .hero-chip { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: 0.06em; padding: 5px 12px; border-radius: 4px; background: var(--green-dim); border-left: 2px solid var(--green); }
+    .hero-chip.cyan { color: var(--cyan); background: var(--cyan-dim); border-left-color: var(--cyan); }
     .hero-bio { font-size: 16px; color: var(--text-muted); max-width: 540px; margin-bottom: 2.5rem; line-height: 1.85; }
     .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; }
     .btn { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; padding: 11px 22px; border-radius: 5px; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
@@ -91,10 +94,10 @@
     .btn-outline:hover { border-color: var(--green); color: var(--green); }
 
     /* STATS BAR */
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 56px; }
-    .stat { background: var(--bg-card); padding: 28px 20px; text-align: center; }
+    .stats-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 56px; }
+    .stat { background: var(--bg-card); padding: 28px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .stat-num { font-family: var(--mono); font-size: 30px; font-weight: 700; color: var(--green); display: block; line-height: 1; }
-    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 6px; display: block; }
+    .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 6px; display: block; text-align: center; word-break: keep-all; }
 
     /* ── PROJECTS ── */
     .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
@@ -393,11 +396,15 @@
       <div class="hero-content">
         <div class="hero-prompt"><span class="prompt-arrow">❯</span>jack@portfolio:~$&nbsp;whoami</div>
         <h1 class="hero-name">Jack<br><span class="accent">Natsagdorj</span></h1>
-        <div class="hero-role">Analytics &nbsp;*&nbsp; Machine Learning &nbsp;*&nbsp; Business Intelligence</div>
+        <div class="hero-role">Business Intelligence &nbsp;*&nbsp; Machine Learning</div>
+        <div class="hero-meta">
+          <span class="hero-chip">@ Vancouver Coastal Health &nbsp;·&nbsp; People Analytics</span>
+          <span class="hero-chip cyan">McGill MMA &nbsp;·&nbsp; in progress</span>
+          <span class="hero-chip cyan">UBC &nbsp;·&nbsp; Mathematics</span>
+        </div>
         <p class="hero-bio">
           Data Analyst with 5+ years in healthcare and technology. I build predictive models,
-          analytics infrastructure, and dashboards that power real decisions — from 21M-record
-          payroll pipelines to loan default classifiers.
+          analytics infrastructure, and dashboards that power real decisions.
         </p>
         <div class="hero-links">
           <a href="#projects" class="btn btn-primary">view_projects()</a>
@@ -409,7 +416,7 @@
         <div class="stat"><span class="stat-num">5+</span><span class="stat-label">Years Experience</span></div>
         <div class="stat"><span class="stat-num">21M+</span><span class="stat-label">Records Processed</span></div>
         <div class="stat"><span class="stat-num">15+</span><span class="stat-label">Dashboards Built</span></div>
-        <div class="stat"><span class="stat-num">27K+</span><span class="stat-label">Org Footprint</span></div>
+        <div class="stat"><span class="stat-num">27K+</span><span class="stat-label">Employees Served</span></div>
       </div>
     </section>
   </div>
