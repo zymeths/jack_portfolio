@@ -591,15 +591,78 @@
       <h2>Blog &amp; Writeups</h2>
       <div class="blog-list">
 
-        <!-- POST 01 -->
+        <!-- POST 01 — PUBLISHED -->
         <div class="blog-item fade-in">
           <div class="blog-item-header">
             <div>
               <div class="blog-category">machine learning</div>
-              <div class="blog-title">Building Production-Grade ML Pipelines for Credit Risk</div>
+              <div class="blog-title">Building a Loan Default Predictor: From Messy Notebook to 0.924 AUC</div>
               <div class="blog-excerpt">What I learned going from messy raw financial data to a deployable loan default classifier — preprocessing decisions, model selection, and the trade-offs nobody writes about.</div>
             </div>
-            <span class="badge">coming soon</span>
+            <span class="blog-toggle">[ + read ]</span>
+          </div>
+          <div class="blog-expand">
+            <div class="blog-expand-inner">
+              <div class="blog-meta">
+                <span>May 2026</span>
+                <span>machine learning</span>
+                <span>10 min read</span>
+              </div>
+              <div class="blog-article">
+
+                <p>I recently competed in Kaggle's Playground Series S5E11 — a binary classification problem predicting whether a borrower would pay back their loan. The dataset had 600k rows, an 80/20 class imbalance, and was evaluated on AUC-ROC. This is a writeup of every meaningful decision I made, including the ones that backfired.</p>
+
+                <h3>The Data</h3>
+                <p>Eleven features: a mix of financial metrics (<strong>debt_to_income_ratio</strong>, <strong>credit_score</strong>, <strong>interest_rate</strong>, <strong>loan_amount</strong>, <strong>annual_income</strong>) and demographic categoricals (<strong>employment_status</strong>, <strong>loan_purpose</strong>, <strong>grade_subgrade</strong>, <strong>education_level</strong>, <strong>gender</strong>, <strong>marital_status</strong>).</p>
+                <p>The first thing I confirmed was the class split: 79.9% paid back, 20.1% default. A 4:1 imbalance isn't catastrophic, but it's significant enough that accuracy is a completely useless metric. From the very first cell, I tracked AUC-ROC only. No missing values — unusual for real lending data, consistent with the synthetic generation process this competition used.</p>
+
+                <h3>EDA Findings That Actually Mattered</h3>
+                <p><strong>debt_to_income_ratio dominates.</strong> When I ran feature importances after the first model, this feature was 2.5x more important than the second-placed feature. That gap held up throughout tuning.</p>
+                <p><strong>grade_subgrade has a clean ordinal signal.</strong> Plotting default rate by grade showed a near-perfect gradient — A grades default least, F grades default most. This told me immediately that label encoding was the wrong choice here. It needed ordinal encoding.</p>
+                <p><strong>interest_rate underperformed expectations.</strong> In real-world lending models, interest rate is typically a top predictor. Here it ranked below employment_status — a quirk of synthetic data generation worth noting but not worth chasing.</p>
+                <p><strong>gender and marital_status contributed almost nothing.</strong> Feature importances confirmed what the EDA hinted at. They got dropped before the final model.</p>
+
+                <h3>Modelling Approach</h3>
+                <p>I started with three models at default parameters to establish a floor: Logistic Regression, LightGBM, and XGBoost. Logistic Regression scored 0.8725 AUC. Both tree models scored 0.9201 — identical to four decimal places, which told me the ceiling at default parameters was data-determined, not model-determined.</p>
+                <p>That jump from 0.87 to 0.92 confirmed tree models were the right direction. The question was how much I could push past 0.92.</p>
+                <p><strong>Encoding matters more than I expected.</strong> My first pass used label encoding on all categoricals — fast, simple, a reasonable starting point. I moved to ordinal encoding for <em>grade_subgrade</em> and <em>education_level</em>, and target encoding for <em>loan_purpose</em> and <em>employment_status</em>.</p>
+                <p><strong>Feature engineering.</strong> I created four ratio features grounded in lending logic: loan-to-income, interest burden, implied total debt, and loan-to-credit score. I also tried credit score bands, interest rate bands, and splitting grade_subgrade into components — feature importances revealed all of these were near-zero. LightGBM already handles binning internally, so manually binning just lost information.</p>
+                <p><strong>Hyperparameter tuning with Optuna.</strong> Rather than grid search, I used Bayesian optimisation. 50 trials pushed the CV score from 0.9201 to 0.9231.</p>
+
+                <h3>The Leakage Problem</h3>
+                <p>This is the most important part of the writeup.</p>
+                <p>I submitted my first model and got <strong>0.80 AUC on the leaderboard</strong> — a 12-point gap from my 0.92 CV score. That gap is the signature of data leakage.</p>
+                <p>The culprit was target encoding. I calculated encoded values using the entire training set including its target, then trained and validated on that same data. Every validation row had already leaked its target information into its own features. The CV score looked great because the model was essentially peeking at the answers. On Kaggle's test set there was no leakage, and the true performance was exposed.</p>
+                <p>The fix was to move target encoding <em>inside each cross-validation fold</em>: fit the encoder on fold training rows only, transform validation and test rows using that fold's mapping, never let a validation row influence its own encoding.</p>
+                <p>I also switched from standard KFold to <strong>Stratified KFold</strong>, which guarantees each fold maintains the same 80/20 class ratio. And rather than fitting one model and predicting once, I averaged test predictions across all 5 folds — a simple form of ensembling that reduces variance.</p>
+
+                <div class="blog-callout">
+                  <p>The result: leaderboard score jumped to 0.924. The honest version of this story is that 0.924 was always the true performance. The 0.92 CV score with leakage wasn't a good model — it was a misleading measurement.</p>
+                </div>
+
+                <h3>What the Final Pipeline Looks Like</h3>
+                <p>The final model is a LightGBM classifier with Optuna-tuned hyperparameters, trained inside a 5-fold stratified loop with leakage-free target encoding. The codebase is split into three files:</p>
+                <table class="blog-table">
+                  <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>features.py</strong></td><td>All encoding and feature engineering logic as importable functions</td></tr>
+                    <tr><td><strong>train.py</strong></td><td>Full training pipeline, runnable as a single command</td></tr>
+                    <tr><td><strong>evaluate.py</strong></td><td>ROC curves, feature importances, prediction distributions</td></tr>
+                  </tbody>
+                </table>
+                <p>The entire pipeline reproduces the 0.924 submission with <em>python src/train.py</em>.</p>
+
+                <h3>What I'd Do Differently</h3>
+                <p><strong>Tune target encoding smoothing as a hyperparameter.</strong> I fixed smoothing=10 throughout. It controls how aggressively rare categories are pulled toward the global mean — worth tuning alongside model parameters.</p>
+                <p><strong>Check train/test distribution shift earlier.</strong> I planned to compare feature distributions between train and test in the EDA and skipped it. That check would have flagged the leakage risk sooner.</p>
+                <p><strong>Blend LightGBM and XGBoost properly.</strong> I experimented with blending but the final submission used LightGBM only. With leakage-free OOF predictions from both models, a weighted blend often gives another small lift because the two models make different errors.</p>
+
+                <h3>The Lesson That Sticks</h3>
+                <p>Cross-validation score is only a meaningful number if it accurately simulates what will happen on unseen data. The moment any information from a validation row touches the encoding, features, or model that predicts it, the CV score becomes optimistic and untrustworthy.</p>
+                <p>This is why production ML pipelines treat preprocessing as part of the model — not a separate step that happens beforehand. Sklearn's Pipeline object exists precisely to enforce this boundary. It's the next thing I'm building into this project.</p>
+
+              </div>
+            </div>
           </div>
         </div>
 
